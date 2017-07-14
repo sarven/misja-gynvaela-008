@@ -1,0 +1,16 @@
+{
+    "name": "gynvael_mission/008",
+    "description": "Gynvael's mission 008",
+    "type": "project",
+    "license": "GPL 3.0",
+    "authors": [
+        {
+            "name": "sarven",
+            "email": "sarvendev@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"LIDAR\\": "src/"}
+    },
+    "require": {}
+}
