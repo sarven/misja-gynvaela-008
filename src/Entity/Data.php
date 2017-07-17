@@ -8,7 +8,10 @@ namespace LIDAR\Entity;
  */
 class Data
 {
-    CONST DIRECTIONS = ['east', 'west', 'south', 'north'];
+    const DIRECTIONS = ['east', 'west', 'south', 'north'];
+    const INFINITY = 'inf';
+    const NOT_POSSIBLE = 'not possible';
+
     /**
      * @var Point
      */

@@ -58,9 +58,11 @@ final class DataParser implements DataParserInterface
     {
         $distances = [];
         for ($i = 2, $angle = 0; $i < count($rows) - 4; $i++, $angle += 10) {
+            $distance = $rows[$i] !== Data::INFINITY ? $rows[$i] : -1;
+
             $distances[] = (new Distance())
                 ->setAngle($angle)
-                ->setDistance($rows[$i])
+                ->setDistance($distance)
             ;
         }
 

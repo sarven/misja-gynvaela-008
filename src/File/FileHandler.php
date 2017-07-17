@@ -16,7 +16,7 @@ final class FileHandler implements FileHandlerInterface
     public function save(string $name, string $content): int
     {
         try {
-            $handle = static::createFile($name, 'c');
+            $handle = static::createFile($name, 'x');
             $bytes = static::write($handle, $content);
             static::closeFile($handle);
 
