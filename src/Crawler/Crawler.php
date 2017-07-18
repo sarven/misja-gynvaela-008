@@ -93,7 +93,12 @@ final class Crawler implements CrawlerInterface
      */
     private function parseContent(string $fileName): Data
     {
-        $content = file_get_contents(sprintf(self::URL_PATTERN, $fileName));
+        $content = false;
+
+        while (!$content) {
+            $content = file_get_contents(sprintf(self::URL_PATTERN, $fileName));
+        }
+
         $bytes = $this->fileHandler->save($fileName, $content);
         $this->done->push($fileName);
         $this->downloadedFiles += 1;
