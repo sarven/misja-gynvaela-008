@@ -8,22 +8,51 @@ namespace LIDAR\File;
  */
 final class FileHandler implements FileHandlerInterface
 {
-    const DATA_DIR = '/../../data/';
+    const DATA_DIR = __DIR__.'/../../data/';
 
     /**
      * {@inheritdoc}
      */
     public function save(string $name, string $content): int
     {
-        try {
-            $handle = static::createFile($name, 'x');
-            $bytes = static::write($handle, $content);
-            static::closeFile($handle);
+        $handle = static::createFile($name, 'x');
+        $bytes = static::write($handle, $content);
+        static::closeFile($handle);
 
-            return $bytes;
-        } catch (\Exception $e) {
-            echo $e->getMessage();
+        return $bytes;
+
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    public function read(string $name): string
+    {
+        $content = file_get_contents(self::DATA_DIR.$name);
+
+        if (!$content) {
+            throw new \RuntimeException('Cannot open file: '.$name);
         }
+
+        return $content;
+    }
+
+    /**
+     * @return \FilesystemIterator
+     */
+    public static function createIterator(): \FilesystemIterator
+    {
+        return new \FilesystemIterator(self::DATA_DIR, \FilesystemIterator::SKIP_DOTS);
+    }
+
+    /**
+     * @param \FilesystemIterator $filesystemIterator
+     * @return int
+     */
+    public static function getCount(\FilesystemIterator $filesystemIterator): int
+    {
+        return iterator_count($filesystemIterator);
     }
 
     /**
@@ -33,7 +62,7 @@ final class FileHandler implements FileHandlerInterface
      */
     private static function createFile(string $name, string $mode)
     {
-        $handle = fopen(__DIR__.self::DATA_DIR.$name, $mode);
+        $handle = fopen(self::DATA_DIR.$name, $mode);
 
         if (!$handle) {
             throw new \RuntimeException('Cannot create file.');
