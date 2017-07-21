@@ -28,53 +28,26 @@ final class Drawer implements DrawerInterface
     private $pointCalculator;
 
     /**
-     * @var resource
-     */
-    private $image;
-
-    /**
      * Drawer constructor.
      * @param PointCalculator $pointCalculator
      */
     public function __construct(PointCalculator $pointCalculator)
     {
         $this->pointCalculator = $pointCalculator;
-        $this->image = $this->getImage();
     }
 
     /**
-     * @param Data $data
+     * {@inheritdoc}
      */
-    public function draw(Data $data): void
+    public function saveMap($map): void
     {
-        $points = $this->pointCalculator->calc($data);
-        $this->drawPoints($points);
+        imagejpeg($map, self::MAP_FILE);
     }
 
     /**
-     * @param Point[] $points
+     * {@inheritdoc}
      */
-    private function drawPoints(array $points): void
-    {
-        foreach ($points as $point) {
-            $this->drawPoint($point);
-        }
-    }
-
-    /**
-     * @param Point $point
-     */
-    private function drawPoint(Point $point): void
-    {
-        $black = imagecolorallocate($this->image, self::COLOR['R'], self::COLOR['G'], self::COLOR['B']);
-        imagefilledarc($this->image, self::RATIO * $point->getX(), self::RATIO * $point->getY(), 1, 1, 0, 360, $black, IMG_ARC_PIE);
-        imagejpeg($this->image, self::MAP_FILE);
-    }
-
-    /**
-     * @return resource
-     */
-    private function getImage()
+    public function createMap()
     {
         $image = imagecreatetruecolor(self::WIDTH, self::HEIGHT);
         $white = imagecolorallocate($image, 255, 255, 255);
@@ -82,5 +55,35 @@ final class Drawer implements DrawerInterface
         imagejpeg($image, self::MAP_FILE);
 
         return $image;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function draw($map, Data $data): void
+    {
+        $points = $this->pointCalculator->calc($data);
+        $this->drawPoints($map, $points);
+    }
+
+    /**
+     * @param resource $map
+     * @param Point[] $points
+     */
+    private function drawPoints($map, array $points): void
+    {
+        foreach ($points as $point) {
+            $this->drawPoint($map, $point);
+        }
+    }
+
+    /**
+     * @param resource $map
+     * @param Point $point
+     */
+    private function drawPoint($map, Point $point): void
+    {
+        $black = imagecolorallocate($map, self::COLOR['R'], self::COLOR['G'], self::COLOR['B']);
+        imagefilledarc($map, self::RATIO * $point->getX(), self::RATIO * $point->getY(), 1, 1, 0, 360, $black, IMG_ARC_PIE);
     }
 }

@@ -62,16 +62,22 @@ final class Solver implements SolverInterface
 
     private function processFiles(): void
     {
+        $startTime = time();
         $fileIterator = FileHandler::createIterator();
         $count = FileHandler::getCount($fileIterator);
+        $map = $this->drawer->createMap();
         $i = 1;
 
         foreach ($fileIterator as $file) {
             $data = $this->parseContent($file->getFileName());
-            $this->drawer->draw($data);
+            $this->drawer->draw($map, $data);
             $this->output->writeLn($i.' of '.$count.' files processed.');
             $i++;
         }
+
+        $this->drawer->saveMap($map);
+        $duration = time() - $startTime;
+        $this->output->writeLn('Parsed '.($i-1).' files in '.$duration.' seconds');
     }
 
     /**

@@ -11,7 +11,18 @@ use LIDAR\Entity\Data;
 interface DrawerInterface
 {
     /**
+     * @return resource
+     */
+    public function createMap();
+
+    /**
+     * @param resource $map
      * @param Data $data
      */
-    public function draw(Data $data): void;
+    public function draw($map, Data $data): void;
+
+    /**
+     * @param resource $map
+     */
+    public function saveMap($map);
 }
